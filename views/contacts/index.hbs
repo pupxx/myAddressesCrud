@@ -1,0 +1,28 @@
+
+{{>nav}}
+
+<table class="table table-striped">
+  <tr>
+    <th>First Name</th>
+    <th>Phone Number</th>
+    <th>Email</th>
+    <th>Image</th>
+    <th>Address</th>
+    <th>City</th>
+    <th>Zip</th>
+    <th></th>
+  </tr>
+  {{#each contacts}}
+  <tr>
+    <td><a href="/contacts/{{this.id}}">{{this.first_name}} {{this.last_name}}</a>
+    </td>
+    <td>{{this.phone_number}}</td>
+    <td>{{this.email_address}}</td>
+    <td><img src="{{this.image_url}}" alt=""></td>
+    <td>{{this.line_1}} {{this.line_2}}</td>
+    <td>{{this.city}}</td>
+    <td>{{this.zip}}</td>
+    <td><a href="/contacts/delete">delete</a></td>
+  </tr>
+  {{/each}}
+</table>
