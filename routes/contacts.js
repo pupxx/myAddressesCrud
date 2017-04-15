@@ -12,24 +12,35 @@ router.get('/', (req, res)=>{
   });
 });
 
-router.delete(':/id', (req, res)=>{
+router.delete('/:id', (req, res)=>{
+  var obj = {}
   var id = req.params.id;
-  knex('addresses').innerJoin('contacts', 'addresses_id', 'addresses.id').del().where('contacts.id', id).then(()=>{
-    res.redirect('/contacts');
+  var allContactData = knex('addresses').innerJoin('contacts', 'addresses.id', 'contacts.addresses_id').where('contacts.id', id)
+
+  allContactData.first().then((contact)=>{
+    obj.addressid = contact.addresses_id;
+    // console.log(contact);
+    knex('addresses').del().where('addresses.id', obj.addressid).then(()=>{
+      knex('contacts').del().where('contacts.id', id).then(()=>{
+        res.redirect('/contacts');
+      })
+    })
+
   });
+  // return obj
 });
 
 
 //get one
-router.get('/:id', (req, res)=>{
-  var id = req.params.id;
-  knex('contacts').innerJoin('addresses', 'addresses.id', 'contacts.addresses_id').where('contacts.id', id).first()
-  .then((contact)=>{
-    res.render('contacts/contact', {
-      contact
-    });
-  });
-});
+// router.get('/:id', (req, res)=>{
+//   var id = req.params.id;
+//   knex('contacts').innerJoin('addresses', 'addresses.id', 'contacts.addresses_id').where('contacts.id', id).first()
+//   .then((contact)=>{
+//     res.render('contacts/contact', {
+//       contact
+//     });
+//   });
+// });
 
 
 module.exports = router;
