@@ -22,7 +22,13 @@
     <td>{{this.line_1}} {{this.line_2}}</td>
     <td>{{this.city}}</td>
     <td>{{this.zip}}</td>
-    <td><a href="/contacts/delete">delete</a></td>
+    <td>
+      <form class="#"  action="/contacts/{{this.id}}?_method=DELETE" method="POST">
+        <input class="btn btn-default btn-sm"type="submit" name="delete" value="delete">
+      </form>
+    </td>
+
+
   </tr>
   {{/each}}
 </table>

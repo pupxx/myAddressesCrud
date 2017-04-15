@@ -12,6 +12,14 @@ router.get('/', (req, res)=>{
   });
 });
 
+router.delete(':/id', (req, res)=>{
+  var id = req.params.id;
+  knex('addresses').innerJoin('contacts', 'addresses_id', 'addresses.id').del().where('contacts.id', id).then(()=>{
+    res.redirect('/contacts');
+  });
+});
+
+
 //get one
 router.get('/:id', (req, res)=>{
   var id = req.params.id;
@@ -22,5 +30,6 @@ router.get('/:id', (req, res)=>{
     });
   });
 });
+
 
 module.exports = router;

@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var contacts = require('./routes/contacts');
 var hbs = require('hbs');
+var methodOverride = require('method-override');
 hbs.registerPartials(path.join(__dirname + '/views/partials'));
  
 
@@ -22,6 +23,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'))
 
 app.use('/', index);
 app.use('/contacts', contacts)
