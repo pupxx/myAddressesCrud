@@ -1,1 +1,61 @@
 {{>nav}}
+
+
+<form action="/contacts" method="POST">
+  <div class="form-group">
+    <label for="first-name">First Name</label>
+    <input type="text" class="form-control" id="first-name" placeholder="" name="first_name">
+  </div>
+
+  <div class="form-group">
+    <label for="last-name">Last Name</label>
+    <input type="text" class="form-control" id="last-name" placeholder="Last Name" name="last_name">
+  </div>
+
+  <div class="form-group">
+    <label for="phone-number">Phone</label>
+    <input type="text" class="form-control" id="phone_number" placeholder="Last Name" name="phone_number">
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="text" class="form-control" id="email" placeholder="Email" name="email">
+  </div>
+
+  <div class="form-group">
+    <label for="image-url">Image</label>
+    <input type="text" class="form-control" id="image-url" placeholder="Image" name="image_url">
+  </div>
+
+  <div class="form-group">
+    <label for="address-select">Address</label>
+    <select type="select" class="form-control" id="address-select" placeholder="Address" name="address-select">
+      {{#each contact}}
+      <option>{{this.line_1}} {{this.line_2}}</option>
+      {{/each}}
+
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="line-1">Address Line 1</label>
+    <input type="text" class="form-control" id="line-1" placeholder="line-1" name="line_1">
+  </div>
+
+  <div class="form-group">
+    <label for="line-2">Address Line 2</label>
+    <input type="text" class="form-control" id="line-2" placeholder="line-2" name="line_2">
+  </div>
+
+  <div class="form-group">
+    <label for="city">City</label>
+    <input type="text" class="form-control" id="city" placeholder="city" name="city">
+  </div>
+
+  <div class="form-group">
+    <label for="zip">Zip</label>
+    <input type="text" class="form-control" id="zip" placeholder="zip" name="zip">
+  </div>
+
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>

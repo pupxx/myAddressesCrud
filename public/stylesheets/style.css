@@ -10,3 +10,7 @@ a {
 .contactHeadings{
   display: inline;
 }
+
+img{
+  width: 50px;
+}
