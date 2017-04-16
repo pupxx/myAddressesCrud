@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var knex = require('../db/connection')
+var knex = require('../db/connection');
 
 //Get all
 router.get('/', (req, res)=>{
@@ -26,16 +26,14 @@ router.post('/', function(req, res){
     city: req.body.city,
     zip: req.body.zip
   };
-
   knex('addresses').insert(inputAddress, '*').then((newAddress)=>{
-    let id = newAddress[0].id
+    let id = newAddress[0].id;
     contact.addresses_id = id;
     console.log(contact);
     knex('contacts').insert(contact, '*').then(function(newContact){
       let id = newContact[0].id;
-      res.redirect(`/contacts/${id}`)
+      res.redirect(`/contacts/${id}`);
     });
-
   });
 });
 
@@ -43,21 +41,22 @@ router.get('/create', (req, res)=>{
   knex('addresses').innerJoin('contacts', 'addresses.id', 'contacts.addresses_id').then((contact)=>{
     res.render('contacts/create', {
       contact
-    })
-  })
-})
+    });
+  });
+});
 
 router.delete('/:id', (req, res)=>{
   var obj = {}
   var id = req.params.id;
-  var allContactData = knex('addresses').innerJoin('contacts', 'addresses.id', 'contacts.addresses_id').where('contacts.id', id)
+  var allContactData = knex('addresses').innerJoin('contacts', 'addresses.id', 'contacts.addresses_id').where('contacts.id', id);
 
   allContactData.first().then((contact)=>{
     obj.addressid = contact.addresses_id;
-    // console.log(contact);
-    knex('addresses').del().where('addresses.id', obj.addressid).then(()=>{
-      knex('contacts').del().where('contacts.id', id).then(()=>{
+
+    knex('contacts').del().where('contacts.id', id).then(()=>{
+      knex('addresses').whereNotExists(knex('contacts').whereRaw('addresses.id = contacts.addresses_id')).del().then(()=>{
         res.redirect('/contacts');
+
       });
     });
   });
