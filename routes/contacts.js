@@ -12,6 +12,8 @@ router.get('/', (req, res)=>{
   });
 });
 
+
+//Add One - no duplicate addresses to address table.
 router.post('/', function(req, res){
   var contact = {
     first_name: req.body.first_name,
@@ -27,24 +29,37 @@ router.post('/', function(req, res){
     zip: req.body.zip
   };
 
+  var allAddresses = knex('addresses');
+
   var duplicate = knex('addresses').where('addresses.line_1', inputAddress.line_1).andWhere('addresses.line_2', inputAddress.line_2);
 
   var addContact = knex('contacts').insert(contact, '*');
-  
-  duplicate.then((address)=>{
-    if(address){
-      contact.addresses_id = address[0].id;
+
+  var addAddress = knex('addresses').insert(inputAddress, '*');
+
+
+  duplicate.then((duplicate)=>{
+    console.log(duplicate);
+    if(duplicate.length === 0){
+      allAddresses.insert(inputAddress, '*').then((newAddress)=>{
+        id = newAddress[0].id;
+        contact.addresses_id = id;
+        addContact.then((newContact)=>{
+          res.redirect(`/contacts/${id}`)
+        });
+      });
+
+    }else{
+      contact.addresses_id = duplicate[0].id;
       addContact.then((newContact)=>{
-        let id = newContact.id
+        id = newContact[0].id;
         res.redirect(`/contacts/${id}`)
-      })
-
+      });
     }
-
   });
-
 });
 
+//Create One
 router.get('/create', (req, res)=>{
   knex('addresses').innerJoin('contacts', 'addresses.id', 'contacts.addresses_id').then((contact)=>{
     res.render('contacts/create', {
@@ -53,6 +68,7 @@ router.get('/create', (req, res)=>{
   });
 });
 
+//Delete One
 router.delete('/:id', (req, res)=>{
   var obj = {}
   var id = req.params.id;
@@ -69,7 +85,6 @@ router.delete('/:id', (req, res)=>{
     });
   });
 });
-
 
 // get one
 router.get('/:id', (req, res)=>{
