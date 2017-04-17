@@ -27,18 +27,22 @@ router.post('/', function(req, res){
     zip: req.body.zip
   };
 
-  knex('addresses').insert(inputAddress, '*').then((newAddress)=>{
-    let id = newAddress[0].id;
-    contact.addresses_id = id;
-    console.log(contact);
-    knex('contacts').insert(contact, '*').then(function(newContact){
-      knex('addresses').then((all)=>{
-        console.log(all);
+  var duplicate = knex('addresses').where('addresses.line_1', inputAddress.line_1).andWhere('addresses.line_2', inputAddress.line_2);
+
+  var addContact = knex('contacts').insert(contact, '*');
+  
+  duplicate.then((address)=>{
+    if(address){
+      contact.addresses_id = address[0].id;
+      addContact.then((newContact)=>{
+        let id = newContact.id
+        res.redirect(`/contacts/${id}`)
       })
-      let id = newContact[0].id;
-      res.redirect(`/contacts/${id}`);
-    });
+
+    }
+
   });
+
 });
 
 router.get('/create', (req, res)=>{
