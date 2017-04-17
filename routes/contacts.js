@@ -26,11 +26,15 @@ router.post('/', function(req, res){
     city: req.body.city,
     zip: req.body.zip
   };
+
   knex('addresses').insert(inputAddress, '*').then((newAddress)=>{
     let id = newAddress[0].id;
     contact.addresses_id = id;
     console.log(contact);
     knex('contacts').insert(contact, '*').then(function(newContact){
+      knex('addresses').then((all)=>{
+        console.log(all);
+      })
       let id = newContact[0].id;
       res.redirect(`/contacts/${id}`);
     });
@@ -61,8 +65,6 @@ router.delete('/:id', (req, res)=>{
     });
   });
 });
-
-
 
 
 // get one
